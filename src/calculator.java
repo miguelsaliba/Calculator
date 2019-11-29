@@ -2,7 +2,7 @@ import java.util.Arrays;
 
 public class calculator {
     public static void main(String[] args) {
-        System.out.println(simplify("2*3*12+7-2/2"));
+        System.out.println(simplify("2*3*((12+7)+4)-2/2"));
     }
 
     private static String[] removeElement(String[] theArray, int firstIndex, int lastIndex){
@@ -23,48 +23,69 @@ public class calculator {
         return newArray;
     }
 
-    private static String simplify(String message) {
+    public static String simplify(String message) {
 
         String[] temp = message.split("(?<=[()+\\-*/^])|(?=[()+\\-*/^])");
-        System.out.println(Arrays.toString(temp));
+        System.out.println(Arrays.asList(temp).toString().substring(1).replaceFirst("]", "").replace(", ", ""));
+
+        int index1 = -1;
+        for (int i = 0; i < temp.length; i++) {
+            if (temp[i].equals("(")) {
+                index1 = i;
+            } else if (temp[i].equals(")")) {
+                if (index1 == -1) {
+                    return "error: incorrect bracket placement";
+                }
+                String[] insideParentheses;
+                if (index1+1 == i){
+                    insideParentheses = Arrays.copyOfRange(temp, index1, i);
+                } else {
+                    insideParentheses = Arrays.copyOfRange(temp, index1 + 1, i);
+                }
+                String num = simplify(String.join("", Arrays.asList(insideParentheses)));
+                temp[i] = num;
+                temp = removeElement(temp, index1, i-1);
+                i = 0;
+                System.out.println(Arrays.asList(temp).toString().substring(1).replaceFirst("]", "").replace(", ", ""));
+            }
+        }
 
         for (int i = 0; i < temp.length; i++) {
             if (temp[i].equals("*")) {
                 temp[i+1] = String.valueOf( Double.parseDouble(temp[i-1]) *  Double.parseDouble(temp[i+1]) );
                 temp = removeElement(temp, i-1, i);
                 i -= 2;
-                System.out.println(Arrays.toString(temp));
+                System.out.println(Arrays.asList(temp).toString().substring(1).replaceFirst("]", "").replace(", ", ""));
 
             } else if (temp[i].equals("/")){
                 if (temp[i + 1].equals("0")) {
-                    temp = new String[]{"ok boomer"};
-                    break;
+                    return "error: dividing by zero";
                 }
                 temp[i+1] = String.valueOf( Double.parseDouble(temp[i-1]) /  Double.parseDouble(temp[i+1]) );
                 temp = removeElement(temp, i-1, i);
                 i -= 2;
-                System.out.println(Arrays.toString(temp));
+                System.out.println(Arrays.asList(temp).toString().substring(1).replaceFirst("]", "").replace(", ", ""));
 
             }
         }
+
         for (int i = 0; i < temp.length; i++) {
             if (temp[i].equals("+")) {
                 temp[i+1] = String.valueOf( Double.parseDouble(temp[i-1]) +  Double.parseDouble(temp[i+1]) );
                 temp = removeElement(temp, i-1, i);
                 i -= 2;
-                System.out.println(Arrays.toString(temp));
-
+                System.out.println(Arrays.asList(temp).toString().substring(1).replaceFirst("]", "").replace(", ", ""));
 
             } else if (temp[i].equals("-")){
                 temp[i+1] = String.valueOf( Double.parseDouble(temp[i-1]) -  Double.parseDouble(temp[i+1]) );
                 temp = removeElement(temp, i-1, i);
                 i -= 2;
-                System.out.println(Arrays.toString(temp));
+                System.out.println(Arrays.asList(temp).toString().substring(1).replaceFirst("]", "").replace(", ", ""));
 
             }
         }
 
-        return message + " = " + temp[0];
+        return temp[0];
 
         // Gets the index of the last iteration of each operator
         /*
