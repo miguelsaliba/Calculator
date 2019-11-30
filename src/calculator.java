@@ -1,8 +1,9 @@
+import java.text.DecimalFormat;
 import java.util.Arrays;
 
 public class calculator {
     public static void main(String[] args) {
-        System.out.println(simplify("2*3*((12+7)+4)-2/2"));
+        simplify("2*3*((12+7)^2+4)-3/2");
     }
 
     private static String[] removeElement(String[] theArray, int firstIndex, int lastIndex){
@@ -24,6 +25,9 @@ public class calculator {
     }
 
     public static String simplify(String message) {
+
+        DecimalFormat format = new DecimalFormat("#.#");
+        format.setDecimalSeparatorAlwaysShown(false);
 
         String[] temp = message.split("(?<=[()+\\-*/^])|(?=[()+\\-*/^])");
         System.out.println(Arrays.asList(temp).toString().substring(1).replaceFirst("]", "").replace(", ", ""));
@@ -51,8 +55,18 @@ public class calculator {
         }
 
         for (int i = 0; i < temp.length; i++) {
+            if (temp[i].equals("^")) {
+                temp[i+1] = String.valueOf( format.format( Math.pow( Double.parseDouble(temp[i-1]),  Double.parseDouble(temp[i+1]) )));
+                temp = removeElement(temp, i-1, i);
+                i -= 2;
+                System.out.println(Arrays.asList(temp).toString().substring(1).replaceFirst("]", "").replace(", ", ""));
+
+            }
+        }
+
+        for (int i = 0; i < temp.length; i++) {
             if (temp[i].equals("*")) {
-                temp[i+1] = String.valueOf( Double.parseDouble(temp[i-1]) *  Double.parseDouble(temp[i+1]) );
+                temp[i+1] = String.valueOf( format.format( Double.parseDouble(temp[i-1]) *  Double.parseDouble(temp[i+1]) ));
                 temp = removeElement(temp, i-1, i);
                 i -= 2;
                 System.out.println(Arrays.asList(temp).toString().substring(1).replaceFirst("]", "").replace(", ", ""));
@@ -61,7 +75,7 @@ public class calculator {
                 if (temp[i + 1].equals("0")) {
                     return "error: dividing by zero";
                 }
-                temp[i+1] = String.valueOf( Double.parseDouble(temp[i-1]) /  Double.parseDouble(temp[i+1]) );
+                temp[i+1] = String.valueOf( format.format( Double.parseDouble(temp[i-1]) /  Double.parseDouble(temp[i+1]) ));
                 temp = removeElement(temp, i-1, i);
                 i -= 2;
                 System.out.println(Arrays.asList(temp).toString().substring(1).replaceFirst("]", "").replace(", ", ""));
@@ -71,13 +85,13 @@ public class calculator {
 
         for (int i = 0; i < temp.length; i++) {
             if (temp[i].equals("+")) {
-                temp[i+1] = String.valueOf( Double.parseDouble(temp[i-1]) +  Double.parseDouble(temp[i+1]) );
+                temp[i+1] = String.valueOf( format.format( Double.parseDouble(temp[i-1]) +  Double.parseDouble(temp[i+1]) ));
                 temp = removeElement(temp, i-1, i);
                 i -= 2;
                 System.out.println(Arrays.asList(temp).toString().substring(1).replaceFirst("]", "").replace(", ", ""));
 
             } else if (temp[i].equals("-")){
-                temp[i+1] = String.valueOf( Double.parseDouble(temp[i-1]) -  Double.parseDouble(temp[i+1]) );
+                temp[i+1] = String.valueOf( format.format( Double.parseDouble(temp[i-1]) -  Double.parseDouble(temp[i+1]) ));
                 temp = removeElement(temp, i-1, i);
                 i -= 2;
                 System.out.println(Arrays.asList(temp).toString().substring(1).replaceFirst("]", "").replace(", ", ""));
