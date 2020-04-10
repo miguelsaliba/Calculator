@@ -100,49 +100,5 @@ public class calculator {
         }
 
         return temp[0];
-
-        // Gets the index of the last iteration of each operator
-        /*
-        int lastMult = message.lastIndexOf("*");
-        int lastDiv = message.lastIndexOf("/");
-        int lastSub = message.lastIndexOf("-");
-        int lastAdd = message.lastIndexOf("+");
-
-        double num;
-
-        // If the last operator is multiplication
-        if (lastMult > lastDiv && lastMult > lastSub && lastMult > lastAdd){
-            // num is the last number in the input string
-            num = Double.parseDouble(message.substring(lastMult+1));
-            // removes the last number and operator from the string
-            message = message.substring(0,lastMult);
-
-            // MAGIC
-            return String.valueOf(Double.parseDouble(simplify(message)) * num);
-
-        }
-        if (lastDiv > lastSub && lastDiv > lastAdd){
-            num = Double.parseDouble(message.substring(lastDiv+1));
-            message = message.substring(0,lastDiv);
-
-            return String.valueOf(Double.parseDouble(simplify(message)) / num);
-
-        }
-        if (lastSub > lastAdd){
-            num = Double.parseDouble(message.substring(lastSub+1));
-            message = message.substring(0,lastSub);
-
-            return String.valueOf(Double.parseDouble(simplify(message)) - num);
-
-        } else if (lastAdd > lastSub){
-            num = Double.parseDouble(message.substring(lastAdd+1));
-            message = message.substring(0,lastAdd);
-
-            return String.valueOf(Double.parseDouble(simplify(message)) + num);
-
-        } else {
-            return message;
-        }
-        */
     }
 }
