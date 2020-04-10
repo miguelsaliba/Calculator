@@ -1,27 +1,8 @@
 import java.text.DecimalFormat;
-import java.util.Arrays;
 
 public class calculator {
     public static void main(String[] args) {
-        simplify("10^(2+0)");
-    }
-
-    private static String[] removeElement(String[] theArray, int firstIndex, int lastIndex){
-        // if the index is not in the array or the array has no elements it returns the array
-        if (theArray == null || firstIndex < 0 || lastIndex < firstIndex || lastIndex >= theArray.length) {
-            return theArray;
-        }
-
-        String[] newArray = new String[theArray.length-(lastIndex-firstIndex)-1];
-
-        for (int i = 0, k = 0; i < theArray.length; i++) {
-            if (i <= lastIndex && i >= firstIndex) {
-                continue;
-            }
-            newArray[k] = theArray[i];
-            k++;
-        }
-        return newArray;
+        simplify("2*3*((12+7)^2+4)-3/2");
     }
 
     public static String simplify(String message) {
@@ -31,7 +12,6 @@ public class calculator {
 
         StringBuilder builder = new StringBuilder(message);
 
-        //String[] temp = message.split("(?<=[()+\\-*/^])|(?=[()+\\-*/^])");
         System.out.println(builder);
 
         int index1 = -1;
@@ -60,10 +40,7 @@ public class calculator {
 
         int index = builder.indexOf("^");
         while (index != -1) {
-            int before = operatorBefore(builder, index);
-            int after = operatorAfter(builder, index);
-
-            builder.replace(before, after, format.format( Math.pow( Double.parseDouble(builder.substring(before, index)),  Double.parseDouble(builder.substring(index+1, after)) )));
+            solve(builder, index, format);
             System.out.println(builder);
             index = builder.indexOf("^");
         }
@@ -89,7 +66,7 @@ public class calculator {
 
     public static boolean solve(StringBuilder builder, int index, DecimalFormat format){
         int before = operatorBefore(builder, index);
-        int after = operatorAfter(builder, index);
+        int after = operatorAfter(builder, index)+1;
 
         double num1 = Double.parseDouble(builder.substring(before, index));
         double num2 = Double.parseDouble(builder.substring(index + 1, after));
@@ -135,6 +112,6 @@ public class calculator {
                 return i-1;
             }
         }
-        return str.length();
+        return str.length()-1;
     }
 }
